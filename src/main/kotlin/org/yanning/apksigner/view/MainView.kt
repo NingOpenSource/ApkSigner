@@ -1,16 +1,16 @@
 package org.yanning.apksigner.view
 
 import javafx.beans.property.SimpleStringProperty
-import javafx.beans.property.StringProperty
 import javafx.event.EventHandler
 import javafx.geometry.Pos
-import javafx.scene.input.KeyCombination
 import javafx.stage.FileChooser
 import org.yanning.apksigner.app.Styles
 import tornadofx.*
+import java.io.File
 
 class MainView : View("Hello TornadoFX") {
     val apkPath = SimpleStringProperty()
+    val outputPath = SimpleStringProperty()
     override val root = vbox {
         menubar {
             menu("File") {
@@ -22,7 +22,9 @@ class MainView : View("Hello TornadoFX") {
             }
             menu("Help") {
                 item("About") {
-                    println("-----------------------------about------------------")
+                    action {
+                        println("-----------------------------about------------------")
+                    }
                 }
             }
             style {
@@ -35,15 +37,50 @@ class MainView : View("Hello TornadoFX") {
             fieldset("Config") {
                 field("apk path") {
                     textfield(apkPath)
-                    button("choose").onAction = EventHandler {
-                        val apkFile = chooseFile("apk picker",
-                                arrayOf(FileChooser.ExtensionFilter("apk", "*.apk")),
-                                FileChooserMode.Single, currentWindow)
-                        apkPath.set(apkFile.firstOrNull()?.absolutePath)
+                    onDragDropped = EventHandler {
+                        it.dragboard.files?.first()?.let {
+                            if (it.isFile && it.name.endsWith(".apk"))
+                                apkPath.set(it.absolutePath)
+                        }
+                    }
+                    button("choose") {
+                        onAction = EventHandler {
+                            val apkFile = chooseFile("apk picker",
+                                    arrayOf(FileChooser.ExtensionFilter("apk", "*.apk")),
+                                    FileChooserMode.Single, currentWindow)
+                            apkPath.set(apkFile.firstOrNull()?.absolutePath)
+                        }
+                        style {
+                            minWidth = 80.px
+                        }
                     }
                 }
                 field("output path") {
-                    textfield { }
+                    textfield(outputPath)
+                    onDragDropped = EventHandler {
+                        it.dragboard.files?.first()?.let {
+                            if (it.isDirectory)
+                                outputPath.set(it.absolutePath)
+                        }
+                    }
+                    button("choose") {
+                        onAction = EventHandler {
+                            val dir = chooseDirectory("output path", File("./"),
+                                    currentWindow)
+                            outputPath.set(dir?.absolutePath)
+                        }
+                        style {
+                            minWidth = 80.px
+                        }
+                    }
+                }
+            }
+            button("sign") {
+                onAction = EventHandler {
+                    println("-----------------------------sign------------------")
+                }
+                style {
+                    minWidth = 120.px
                 }
             }
             style {
