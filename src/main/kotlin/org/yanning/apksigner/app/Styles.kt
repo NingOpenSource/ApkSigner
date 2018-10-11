@@ -14,7 +14,6 @@ class Styles : Stylesheet() {
                 if (fonts.contains("Ubuntu Mono")) {
                     FONT_FAMILY = "Ubuntu Mono"
                 }
-
             }
             return FONT_FAMILY
         }

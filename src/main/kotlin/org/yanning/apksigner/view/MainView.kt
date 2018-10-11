@@ -8,7 +8,7 @@ import org.yanning.apksigner.app.Styles
 import tornadofx.*
 import java.io.File
 
-class MainView : View("Hello TornadoFX") {
+class MainView : View("ApkSigner") {
     val apkPath = SimpleStringProperty()
     val outputPath = SimpleStringProperty()
     override val root = vbox {
@@ -16,14 +16,14 @@ class MainView : View("Hello TornadoFX") {
             menu("File") {
                 item("Setting") {
                     action {
-                        println("-----------------------------ok------------------")
+                        SettingView().openModal()
                     }
                 }
             }
             menu("Help") {
                 item("About") {
                     action {
-                        println("-----------------------------about------------------")
+                        AboutView().openModal()
                     }
                 }
             }
@@ -77,7 +77,7 @@ class MainView : View("Hello TornadoFX") {
             }
             button("sign") {
                 onAction = EventHandler {
-                    println("-----------------------------sign------------------")
+                    tooltip("-----------------------------sign------------------")
                 }
                 style {
                     minWidth = 120.px
