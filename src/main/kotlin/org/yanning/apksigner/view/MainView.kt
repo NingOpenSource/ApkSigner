@@ -11,6 +11,11 @@ import java.io.File
 class MainView : View("ApkSigner") {
     val apkPath = SimpleStringProperty()
     val outputPath = SimpleStringProperty()
+    val keyStore = SimpleStringProperty()
+    val logs = SimpleStringProperty().apply {
+        value = "ApkSigner v0.0.1 logs"
+    }
+
     override val root = vbox {
         menubar {
             menu("File") {
@@ -34,7 +39,7 @@ class MainView : View("ApkSigner") {
             }
         }
         form {
-            fieldset("Config") {
+            fieldset("ApkSigner v0.0.1") {
                 field("apk path") {
                     textfield(apkPath)
                     onDragDropped = EventHandler {
@@ -74,15 +79,52 @@ class MainView : View("ApkSigner") {
                         }
                     }
                 }
-            }
-            button("sign") {
-                onAction = EventHandler {
-                    tooltip("-----------------------------sign------------------")
+                field("keyStore file") {
+                    choicebox(keyStore, arrayListOf("1", "2", "3", "4")) {
+                        value = items[0]
+                        style {
+                            minWidth = 150.px
+                        }
+                    }
+                    button("import") {
+                        action {
+                            ImportKeyStoreView().openModal()
+                        }
+                        style {
+                            minWidth = 80.px
+                        }
+                    }
+                    button("manage") {
+                        action {
+                            SettingView().openModal()
+                        }
+                        style {
+                            minWidth = 80.px
+                        }
+                    }
                 }
-                style {
-                    minWidth = 120.px
+                field {
+                    textarea(logs) {
+                        isEditable = false
+                    }
+                }
+                field {
+                    hbox {
+                        button("sign") {
+                            onAction = EventHandler {
+                                tooltip("-----------------------------sign------------------")
+                            }
+                            style {
+                                minWidth = 120.px
+                            }
+                        }
+                        style {
+                            alignment = Pos.CENTER_RIGHT
+                        }
+                    }
                 }
             }
+
             style {
                 Styles.getFontFamily()?.apply {
                     fontFamily = this

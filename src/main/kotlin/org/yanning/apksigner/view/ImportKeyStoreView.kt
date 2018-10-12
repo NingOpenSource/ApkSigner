@@ -4,43 +4,43 @@ import javafx.beans.property.SimpleStringProperty
 import javafx.geometry.Pos
 import javafx.stage.FileChooser
 import org.yanning.apksigner.app.Styles
-import sun.awt.OSInfo
 import tornadofx.*
 
-class SettingView : View("Setting") {
-    val signToolFieName = if (OSInfo.OSType.WINDOWS == OSInfo.getOSType()) "apksigner.exe" else "apksigner"
-    val signToolPath = SimpleStringProperty()
+class ImportKeyStoreView : View("Import keyStore") {
+    val storeFile = SimpleStringProperty()
+    val storePassword = SimpleStringProperty()
+    val keyAlias = SimpleStringProperty()
+    val keyPassword = SimpleStringProperty()
     override val root = form {
-        fieldset("Environment") {
-            field(signToolFieName) {
-                textfield(signToolPath) {
-                    style {
-                        minWidth = 200.px
-                    }
-                }
-                setOnDragDropped {
-                    it.dragboard.files?.first()?.let {
-                        if (it.isFile && it.name.equals(signToolFieName))
-                            signToolPath.set(it.absolutePath)
-                    }
-                }
+        fieldset {
+            field("storeFile") {
+                textfield(storeFile)
                 button("choose") {
                     setOnAction {
-                        val apkFile = chooseFile("signTool picker",
-                                arrayOf(FileChooser.ExtensionFilter(signToolFieName, signToolFieName)),
+                        val apkFile = chooseFile("keyStore picker",
+                                arrayOf(FileChooser.ExtensionFilter("keyStore file", "*")),
                                 FileChooserMode.Single, currentWindow)
-                        signToolPath.set(apkFile.firstOrNull()?.absolutePath)
+                        storeFile.set(apkFile.firstOrNull()?.absolutePath)
                     }
                     style {
                         minWidth = 80.px
                     }
                 }
             }
+            field("storePassword") {
+                textfield(storePassword)
+            }
+            field("keyAlias") {
+                textfield(keyAlias)
+            }
+            field("keyPassword") {
+                textfield(keyPassword)
+            }
             field {
                 hbox {
-                    button("save") {
+                    button("ok") {
                         action {
-                            tooltip("save success!") {
+                            tooltip("import success!") {
 
                             }
                         }
